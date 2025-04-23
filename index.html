@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Licita Net | Integração com Portal de Compras Públicas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <div class="container mx-auto px-4">
+    <header class="bg-white shadow-md rounded-lg p-4 mb-6">
+      <nav class="flex justify-between items-center">
+        <div class="text-blue-600 text-2xl font-bold">
+          Licita Net
+        </div>
+        <ul class="flex space-x-4">
+          <li><a href="licitacoes.html" class="text-gray-700 hover:text-blue-600">Licitações</a></li>
+          <li><a href="#contratos" class="text-gray-700 hover:text-blue-600">Contratos</a></li>
+          <li><a href="#docs" class="text-gray-700 hover:text-blue-600">Documentação</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="space-y-12">
+      <!-- Seção de Boas-vindas -->
+      <section class="bg-white shadow-md rounded-lg p-6 text-center">
+        <h1 class="text-3xl font-bold text-blue-600 mb-4">Integração Completa com o Compranet</h1>
+        <p class="text-gray-700 mb-6">Acesse e gerencie informações do portal de compras públicas de forma simples e eficiente.</p>
+        <div class="flex justify-center space-x-4">
+          <a href="#dashboard" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700">Iniciar Sistema</a>
+          <!-- <a href="#docs" class="bg-gray-600 text-white px-4 py-2 rounded-md shadow hover:bg-gray-700">Ver Documentação</a> -->
+        </div>
+      </section>
+
+      <!-- Funcionalidades -->
+      <section class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Funcionalidades Principais</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Consulta de Licitações</h3>
+            <p class="text-gray-600">Acesse informações detalhadas sobre licitações públicas.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 10h18M9 21V3m6 18V3"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Gestão de Contratos</h3>
+            <p class="text-gray-600">Acompanhe contratos governamentais em um só lugar.</p>
+          </div>
+          <div class="text-center">
+            <div class="w-16 h-16 mx-auto bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mb-4">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-800">Dashboard Analítico</h3>
+            <p class="text-gray-600">Visualize dados consolidados e indicadores importantes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Integração -->
+      <section class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Integração com APIs Oficiais</h2>
+        <p class="text-gray-700 text-center mb-6">O SaaS Compranet se integra diretamente com as APIs oficiais do portal de compras públicas do Governo Federal:</p>
+        <ul class="list-disc list-inside text-gray-700 space-y-2">
+          <li>API de Compras Governamentais (compras.dados.gov.br)</li>
+          <li>API do Comprasnet Contratos (contratos.comprasnet.gov.br)</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-12 p-6">
+      <div class="flex justify-between">
+        <div>
+          <h4 class="font-bold mb-2">Recursos</h4>
+          <ul class="space-y-1">
+            <li><a href="#dashboard" class="hover:underline">Dashboard</a></li>
+            <li><a href="#licitacoes" class="hover:underline">Licitações</a></li>
+            <li><a href="#contratos" class="hover:underline">Contratos</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-2">Documentação</h4>
+          <ul class="space-y-1">
+            <li><a href="docs/manual_usuario.md" class="hover:underline">Manual do Usuário</a></li>
+            <li><a href="docs/instalacao.md" class="hover:underline">Guia de Instalação</a></li>
+            <li><a href="docs/documentacao.md" class="hover:underline">Documentação Técnica</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-bold mb-2">Suporte</h4>
+          <ul class="space-y-1">
+            <li><a href="mailto:suporte@saas-compranet.com.br" class="hover:underline">Email</a></li>
+            <li><a href="tel:+5500000000000" class="hover:underline">Telefone</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="text-center mt-6">
+        <p>&copy; 2025 SaaS Compranet. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

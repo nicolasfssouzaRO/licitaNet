@@ -1,0 +1,74 @@
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-blue-600 text-center uppercase tracking-wide mb-6">
+                Consulta de Licitações
+            </h2>
+            <form id="licitacoes-search-form" class="space-y-6">
+                <div class="form-group">
+                    <label for="search-termo" class="block text-sm font-medium text-gray-700">Termo de Busca:</label>
+                    <input type="text" id="search-termo" name="termo" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Digite palavras-chave...">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="search-modalidade" class="block text-sm font-medium text-gray-700">Modalidade:</label>
+                        <select id="search-modalidade" name="modalidade" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">Todas</option>
+                            <option value="1">Convite</option>
+                            <option value="2">Tomada de Preços</option>
+                            <option value="3">Concorrência</option>
+                            <option value="4">Concorrência Internacional</option>
+                            <option value="5">Pregão</option>
+                            <option value="6">Dispensa de Licitação</option>
+                            <option value="7">Inexigibilidade</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="search-situacao" class="block text-sm font-medium text-gray-700">Situação:</label>
+                        <select id="search-situacao" name="situacao" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                            <option value="">Todas</option>
+                            <option value="Aberta">Aberta</option>
+                            <option value="Em andamento">Em andamento</option>
+                            <option value="Homologada">Homologada</option>
+                            <option value="Revogada">Revogada</option>
+                            <option value="Anulada">Anulada</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="search-data-inicio" class="block text-sm font-medium text-gray-700">Data Início:</label>
+                        <input type="date" id="search-data-inicio" name="data_inicio" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="search-data-fim" class="block text-sm font-medium text-gray-700">Data Fim:</label>
+                        <input type="date" id="search-data-fim" name="data_fim" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    </div>
+                </div>
+                
+                <div class="flex justify-between">
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Buscar
+                    </button>
+                    <button type="reset" class="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        Limpar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="licitacoes-results" class="mt-6 bg-white shadow-md rounded-lg p-6 hidden"></div>
+        <div id="licitacao-details" class="mt-6 bg-white shadow-md rounded-lg p-6 hidden"></div>
+    </div>
+    <script src="./agent.js"></script>
+    <script src="./pncp.js"></script>
+    <script src="./licitacoes.js"></script>
+    <script src="./api.js"></script>
+</body>
