@@ -8,18 +8,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
   <div class="container mx-auto px-4">
-    <header class="bg-white shadow-md rounded-lg p-4 mb-6">
-      <nav class="flex justify-between items-center">
-        <div class="text-blue-600 text-2xl font-bold">
-          Licita Net
-        </div>
-        <ul class="flex space-x-4">
-          <li><a href="licitacoes.html" class="text-gray-700 hover:text-blue-600">Licitações</a></li>
-          <li><a href="#contratos" class="text-gray-700 hover:text-blue-600">Contratos</a></li>
-          <li><a href="#docs" class="text-gray-700 hover:text-blue-600">Documentação</a></li>
-        </ul>
-      </nav>
-    </header>
+    <div id="header-container"></div><!-- carrega os menus na parte superior da tela -->
 
     <main class="space-y-12">
       <!-- Seção de Boas-vindas -->
@@ -106,3 +95,12 @@
   </div>
 </body>
 </html>
+<script>
+  // Carregar o header dinamicamente
+  fetch('header.html')
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById('header-container').innerHTML = data;
+    })
+    .catch(error => console.error('Erro ao carregar o header:', error));
+</script>

@@ -3,6 +3,15 @@ let currentPage = 1; // Página inicial
 const resultsPerPage = 10; // Número de resultados por página
 let totalPages = 0;
 
+    // Carregar o header dinamicamente
+    fetch('header.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('header-container').innerHTML = data;
+      })
+      .catch(error => console.error('Erro ao carregar o header:', error));
+
+
 document.getElementById('licitacoes-search-form').addEventListener('submit', async function (event) {
     event.preventDefault();
     currentPage = 1; // Reinicia para a primeira página
