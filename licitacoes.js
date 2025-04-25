@@ -115,14 +115,29 @@ async function fetchAndRenderData() {
                     <p class="text-lg font-bold text-blue-600">${item.modalidadeNome}  ${item.processo} Município de ${item.unidadeOrgao.municipioNome}</h3>
                     <p><strong>Unidade Órgão:</strong> ${item.processo}</p>
                     <p><strong>Ano Compra:</strong> ${item.anoCompra || 'Não informado'}</p>
-                    <p><strong>Objeto Compra:</strong> ${item.objetoCompra || 'Não informado'}</p>
+                    <p>${item.objetoCompra}</p>
                     <div class="flex space-x-2 mt-4">
                         <p><strong>Valor Total Estimado:</strong> ${item.valorTotalEstimado?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'Não informado'}</p>
                         <p><strong>Portal:</strong> ${item.usuarioNome || 'Não informado'}</p>
                     </div>
                     <div class="flex space-x-2 mt-4">
-                        <img src="icones/adicionar.png" alt="Participar" class="w-5 h-5 cursor-pointer" title="Participar">
-                        <img src="icones/documento.png" alt="Arquivos" class="w-5 h-5 cursor-pointer" title="Arquivos">
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Participar
+                        </button>
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                            Arquivos
+                        </button>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" onclick="toggleItensEdital(this)">
+                            Ver Itens do Edital
+                        </button>
+                    </div>
+                    <div class="hidden mt-2 p-4 bg-gray-100 rounded-lg shadow-md" id="itens-edital">
+                        <p><strong>Itens do Edital:</strong></p>
+                        <ul>
+                            <li>Item 1: Descrição do item</li>
+                            <li>Item 2: Descrição do item</li>
+                            <li>Item 3: Descrição do item</li>
+                        </ul>
                     </div>
                 `;
 
@@ -140,3 +155,13 @@ async function fetchAndRenderData() {
         console.error('Erro ao buscar licitações:', error);
     }
 }
+    function toggleItensEdital(button) {
+        const itensEdital = button.nextElementSibling;
+        if (itensEdital.classList.contains('hidden')) {
+            itensEdital.classList.remove('hidden');
+            button.textContent = 'Ocultar Itens do Edital';
+        } else {
+            itensEdital.classList.add('hidden');
+            button.textContent = 'Ver Itens do Edital';
+        }
+    }
