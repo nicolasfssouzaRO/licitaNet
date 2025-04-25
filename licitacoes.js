@@ -32,21 +32,62 @@ document.getElementById('next-page').addEventListener('click', async function ()
     }
 });
 
+async function carregarModalidades() {
+    const selectModalidade = document.getElementById('search-modalidade');
+
+    try {
+        const response = await fetch('https://pncp.gov.br/api/pncp/v1/modalidades?statusAtivo=true', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao carregar modalidades: ${response.statusText}`);
+        }
+
+        const modalidades = await response.json();
+
+        // Limpa o combo antes de adicionar as opções
+        selectModalidade.innerHTML = '<option value="0">Selecione uma modalidade</option>';
+
+        // Preenche o combo com as modalidades retornadas
+        modalidades.forEach(modalidade => {
+            const option = document.createElement('option');
+            option.value = modalidade.id; // Define o ID como value
+            option.textContent = modalidade.nome; // Define o nome como texto visível
+            selectModalidade.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Erro ao carregar modalidades:', error);
+    }
+}
+
+// Chama a função para carregar as modalidades ao carregar a página
+document.addEventListener('DOMContentLoaded', carregarModalidades);
+
 async function fetchAndRenderData() {
     const dataInicio = document.getElementById('search-data-inicio').value;
     const dataFim = document.getElementById('search-data-fim').value;
-    const tbody = document.getElementById("licitacoes-body");
+    const modalidade = document.getElementById("search-modalidade").value;
+    const estado = document.getElementById("search-estado").value;
+    const licitacoesBody = document.getElementById("licitacoes-body");
 
-    if (!dataInicio || !dataFim) {
+    if (!dataInicio && !dataFim) {
         alert('Por favor, preencha as datas de início e fim.');
         return;
+    }else if ((dataInicio && dataFim) && estado =="0") {
+        const formattedDataInicio = dataInicio.replace(/-/g, '');
+        const formattedDataFim = dataFim.replace(/-/g, '');
+        apiUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&pagina=${currentPage}&tamanhoPagina=${resultsPerPage}`;
+    }else if ((dataInicio && dataFim) && estado != "0") {
+        const formattedDataInicio = dataInicio.replace(/-/g, '');
+        const formattedDataFim = dataFim.replace(/-/g, '');
+        apiUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&uf=${estado}&pagina=${currentPage}&tamanhoPagina=${resultsPerPage}`;  
     }
 
-    const formattedDataInicio = dataInicio.replace(/-/g, '');
-    const formattedDataFim = dataFim.replace(/-/g, '');
-    apiUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=1&pagina=${currentPage}&tamanhoPagina=${resultsPerPage}`;
-
-    tbody.innerHTML = ''; // Limpa o corpo da tabela antes de adicionar novas linhas
+    licitacoesBody.innerHTML = ''; // Limpa os painéis antes de adicionar novos
 
     try {
         const response = await fetch(apiUrl, {
@@ -61,29 +102,35 @@ async function fetchAndRenderData() {
         }
 
         const responseData = await response.json();
-        console.log(responseData); // Verifique os dados retornados
 
         if (responseData.data && Array.isArray(responseData.data)) {
             const licitacoesResults = document.getElementById("licitacoes-results");
             licitacoesResults.classList.remove("hidden");
 
             responseData.data.forEach(item => {
-                const row = document.createElement("tr");
+                const panel = document.createElement("div");
+                panel.className = "p-4 bg-gray-100 rounded-lg shadow-md";
 
-                row.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.numeroCompra || 'Não informado'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.unidadeOrgao?.nomeUnidade || 'Não informado'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.anoCompra || 'Não informado'}</td>
-                    <td class="px-6 py-4 whitespace-normal break-words text-sm text-gray-900">${item.objetoCompra || 'Não informado'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.valorTotalEstimado?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'Não informado'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.situacaoCompraNome || 'Não informado'}</td>
+                panel.innerHTML = `
+                    <p class="text-lg font-bold text-blue-600">${item.modalidadeNome}  ${item.processo} Município de ${item.unidadeOrgao.municipioNome}</h3>
+                    <p><strong>Unidade Órgão:</strong> ${item.processo}</p>
+                    <p><strong>Ano Compra:</strong> ${item.anoCompra || 'Não informado'}</p>
+                    <p><strong>Objeto Compra:</strong> ${item.objetoCompra || 'Não informado'}</p>
+                    <div class="flex space-x-2 mt-4">
+                        <p><strong>Valor Total Estimado:</strong> ${item.valorTotalEstimado?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) || 'Não informado'}</p>
+                        <p><strong>Portal:</strong> ${item.usuarioNome || 'Não informado'}</p>
+                    </div>
+                    <div class="flex space-x-2 mt-4">
+                        <img src="icones/adicionar.png" alt="Participar" class="w-5 h-5 cursor-pointer" title="Participar">
+                        <img src="icones/documento.png" alt="Arquivos" class="w-5 h-5 cursor-pointer" title="Arquivos">
+                    </div>
                 `;
 
-                tbody.appendChild(row);
+                licitacoesBody.appendChild(panel);
             });
 
             // Atualiza a paginação
-            totalPages = Math.ceil(responseData.totalRegistros / resultsPerPage); // Calcula o total de páginas
+            totalPages = Math.ceil(responseData.totalRegistros / resultsPerPage);
             document.getElementById('current-page').textContent = `Página ${currentPage} de ${totalPages}`;
             document.getElementById('pagination-controls').classList.remove('hidden');
         } else {
