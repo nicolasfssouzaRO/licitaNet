@@ -1,4 +1,10 @@
 <script src="https://cdn.tailwindcss.com"></script>
+<style>
+    #modal-content {
+        max-height: 800px; /* Limita a altura máxima */
+        overflow-y: auto; /* Adiciona barra de rolagem vertical se necessário */
+    }
+</style>
 <body class="bg-gray-100 min-h-screen flex justify-center">
     <div class="container mx-auto px-4">
         <div id="header-container"></div><!-- carrega os menus na parte superior da tela -->
@@ -88,7 +94,7 @@
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Buscar
                     </button>
-                    <button type="reset" class="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <button type="reset" class="bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" id="limpar-button">
                         Limpar
                     </button>
                 </div>
@@ -111,5 +117,22 @@
         </div>
         
     </div>
-    <script src="./licitacoes.js"></script>
+
+    <div id="modal-itens-edital" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-1/2 p-6">
+            <div class="flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800">Itens do Edital</h2>
+                <button id="close-modal" class="text-gray-500 hover:text-gray-700">&times;</button>
+            </div>
+            <div id="modal-content" class="mt-4" style="max-height: 800px; overflow-y: auto;">
+                <!-- Os itens do edital serão inseridos aqui -->
+            </div>
+            <div class="mt-6 text-right">
+                <button id="close-modal-footer" class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="./licitacoes.js"></script>
