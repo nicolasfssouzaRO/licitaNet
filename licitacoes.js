@@ -145,7 +145,7 @@ async function fetchAndRenderData() {
                         <button class="bg-blue-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                             Participar
                         </button>
-                        <button class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                        <button class="bg-gray-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500" data-item='${JSON.stringify(item)}' onclick="toggleArquivos(this)">
                             Arquivos
                         </button>
                         <button class="bg-green-500 text-white px-4 py-2 rounded-md shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" data-item='${JSON.stringify(item)}' onclick="toggleItensEdital(this)">
@@ -230,6 +230,68 @@ async function toggleItensEdital(button) {
     } catch (error) {
         console.error('Erro ao buscar itens do edital:', error);
         modalContent.innerHTML = '<p class="text-red-500">Erro ao carregar os itens. Tente novamente mais tarde.</p>';
+    }
+
+    // Exibe a modal
+    modal.classList.remove("hidden");
+}
+
+async function toggleArquivos(button) {
+    const modal = document.getElementById("modal-itens-edital");
+    const modalContent = document.getElementById("modal-content");
+    const item = JSON.parse(button.dataset.item);
+    const apiUrlItem = `https://pncp.gov.br/api/pncp/v1/orgaos/${item.orgaoEntidade.cnpj}/compras/${item.anoCompra}/${item.sequencialCompra}/arquivos`;
+
+    try {
+        // Faz a requisição à API
+        const response = await fetch(apiUrlItem, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro ao buscar arquivos: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Verifica se há arquivos retornados
+        if (data && Array.isArray(data)) {
+            let tableRows = '';
+            document.getElementById('titulo-modal').text = 'Arquivos do Edital';
+            // Itera sobre os itens usando forEach
+            data.forEach(item => {
+                tableRows += `
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 border border-gray-300">${item.sequencialDocumento}</td>
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-900 border border-gray-300"><a href="${item.url}" target="_blank" class="text-blue-500 underline">
+                            Baixar</a></td>
+                    </tr>
+                `;
+            });
+            
+            // Insere as linhas na tabela
+            modalContent.innerHTML = `
+                <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">Nº</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border border-gray-300">Link do Arquivo</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        ${tableRows}
+                    </tbody>
+                </table>
+            `;
+        } else {
+            modalContent.innerHTML = '<p class="text-gray-500">Nenhum arquivo encontrado.</p>';
+        }
+    } catch (error) {
+        console.error('Erro ao buscar arquivos:', error);
+        modalContent.innerHTML = '<p class="text-red-500">Erro ao carregar os arquivos. Tente novamente mais tarde.</p>';
     }
 
     // Exibe a modal
