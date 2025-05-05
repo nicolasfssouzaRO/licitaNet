@@ -132,7 +132,7 @@ async function fetchAndRenderData() {
                 panel.innerHTML = `
                     <p class="text-lg font-bold text-blue-600">${item.modalidadeNome} Nº Processo: ${item.numeroCompra} Município de ${item.unidadeOrgao.municipioNome}</h3>
                     <p><strong>Aviso de Contratação Direta nº: ${item.numeroCompra}/${item.anoCompra}</strong></p>
-                    <p><strong>Unidade Órgão:</strong> ${item.unidadeOrgao.nomeUnidade}</p>
+                    <p><strong>Unidade Órgão:</strong> ${item.unidadeOrgao.codigoUnidade} - ${item.unidadeOrgao.nomeUnidade}</p>
                     <p><strong>Ano Compra:</strong> ${item.anoCompra || 'Não informado'}</p>
                     <p>${item.objetoCompra}</p>
                     <div class="flex space-x-2 mt-4">
