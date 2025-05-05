@@ -130,8 +130,9 @@ async function fetchAndRenderData() {
                 panel.className = "p-4 bg-gray-100 rounded-lg shadow-md";
 
                 panel.innerHTML = `
-                    <p class="text-lg font-bold text-blue-600">${item.modalidadeNome}  ${item.processo} Município de ${item.unidadeOrgao.municipioNome}</h3>
-                    <p><strong>Unidade Órgão:</strong> ${item.processo}</p>
+                    <p class="text-lg font-bold text-blue-600">${item.modalidadeNome} Nº Processo: ${item.numeroCompra} Município de ${item.unidadeOrgao.municipioNome}</h3>
+                    <p><strong>Aviso de Contratação Direta nº: ${item.numeroCompra}/${item.anoCompra}</strong></p>
+                    <p><strong>Unidade Órgão:</strong> ${item.unidadeOrgao.nomeUnidade}</p>
                     <p><strong>Ano Compra:</strong> ${item.anoCompra || 'Não informado'}</p>
                     <p>${item.objetoCompra}</p>
                     <div class="flex space-x-2 mt-4">
