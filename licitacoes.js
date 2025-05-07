@@ -91,6 +91,7 @@ async function fetchAndRenderData() {
     const modalidade = document.getElementById("search-modalidade").value;
     const estado = document.getElementById("search-estado").value;
     const licitacoesBody = document.getElementById("licitacoes-body");
+    const termo = document.getElementById("search-termo").value;
 
     if (!dataInicio && !dataFim) {
         alert('Por favor, preencha as datas de início e fim.');
@@ -120,6 +121,9 @@ async function fetchAndRenderData() {
         }
 
         responseData = await response.json();
+        if(termo != ''){
+            responseData.data = responseData.data.filter(item => item.objetoCompra.toLowerCase().includes(termo.toLowerCase()));
+        }
 
         if (responseData.data && Array.isArray(responseData.data)) {
             const licitacoesResults = document.getElementById("licitacoes-results");
