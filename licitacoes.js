@@ -91,45 +91,82 @@ async function fetchAndRenderData() {
     const modalidade = document.getElementById("search-modalidade").value;
     const estado = document.getElementById("search-estado").value;
     const licitacoesBody = document.getElementById("licitacoes-body");
+    const licitacoesResults = document.getElementById("licitacoes-results");
+    const paginationControls = document.getElementById("pagination-controls");
     const termo = document.getElementById("search-termo").value;
 
-    if (!dataInicio && !dataFim) {
+    // Limpa os resultados anteriores
+    licitacoesBody.innerHTML = ''; // Limpa os painéis de resultados
+    licitacoesResults.classList.add("hidden"); // Oculta a seção de resultados
+    paginationControls.classList.add("hidden"); // Oculta os controles de paginação
+
+    if (!dataInicio || !dataFim) {
         alert('Por favor, preencha as datas de início e fim.');
         return;
-    }else if ((dataInicio && dataFim) && estado =="0") {
-        const formattedDataInicio = dataInicio.replace(/-/g, '');
-        const formattedDataFim = dataFim.replace(/-/g, '');
-        apiUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&pagina=${currentPage}&tamanhoPagina=${resultsPerPage}`;
-    }else if ((dataInicio && dataFim) && estado != "0") {
-        const formattedDataInicio = dataInicio.replace(/-/g, '');
-        const formattedDataFim = dataFim.replace(/-/g, '');
-        apiUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&uf=${estado}&pagina=${currentPage}&tamanhoPagina=${resultsPerPage}`;  
     }
 
-    licitacoesBody.innerHTML = ''; // Limpa os painéis antes de adicionar novos
+    const formattedDataInicio = dataInicio.replace(/-/g, '');
+    const formattedDataFim = dataFim.replace(/-/g, '');
+
+    // Define a URL base da API
+    let baseUrl = '';
+    if (estado === "0" && modalidade === "0") {
+        baseUrl = `https://pncp.gov.br/api/consulta/v1/contratos?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&pagina=1`;
+    } else if (estado !== "0" && modalidade !== "0") {
+        baseUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&uf=${estado}&pagina=1`;
+    } else if (estado === "0" && modalidade !== "0") {
+        baseUrl = `https://pncp.gov.br/api/consulta/v1/contratacoes/publicacao?dataInicial=${formattedDataInicio}&dataFinal=${formattedDataFim}&codigoModalidadeContratacao=${modalidade}&pagina=1`;
+    }
 
     try {
-        const response = await fetch(apiUrl, {
+        // Faz a primeira requisição para obter o total de páginas
+        const initialResponse = await fetch(`${baseUrl}&pagina=1&tamanhoPagina=${resultsPerPage}`, {
             method: 'GET',
             headers: {
                 'Accept': '*/*'
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Erro na requisição: ${response.statusText}`);
+        if (!initialResponse.ok) {
+            throw new Error(`Erro na requisição: ${initialResponse.statusText}`);
         }
 
-        responseData = await response.json();
-        if(termo != ''){
-            responseData.data = responseData.data.filter(item => item.objetoCompra.toLowerCase().includes(termo.toLowerCase()));
+        const initialData = await initialResponse.json();
+        totalPages = Math.ceil(initialData.totalRegistros / resultsPerPage);
+
+        let allData = []; // Array para armazenar todos os resultados
+
+        // Itera por todas as páginas para acumular os dados
+        for (let page = 1; page <= totalPages; page++) {
+            const pageUrl = `${baseUrl}&pagina=${page}&tamanhoPagina=${resultsPerPage}`;
+            const response = await fetch(pageUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro na requisição da página ${page}: ${response.statusText}`);
+            }
+
+            const pageData = await response.json();
+            allData = allData.concat(pageData.data); // Acumula os dados
         }
 
-        if (responseData.data && Array.isArray(responseData.data)) {
-            const licitacoesResults = document.getElementById("licitacoes-results");
+        // Aplica o filtro pelo termo, se fornecido
+        if (termo) {
+            allData = allData.filter(item =>
+                item.objetoCompra &&
+                item.objetoCompra.toLowerCase().includes(termo.toLowerCase())
+            );
+        }
+
+        // Renderiza os resultados
+        if (allData.length > 0) {
             licitacoesResults.classList.remove("hidden");
 
-            responseData.data.forEach(item => {
+            allData.forEach(item => {
                 const panel = document.createElement("div");
                 panel.className = "p-4 bg-gray-100 rounded-lg shadow-md";
 
@@ -160,17 +197,22 @@ async function fetchAndRenderData() {
                 licitacoesBody.appendChild(panel);
             });
 
-            // Atualiza a paginação
-            totalPages = Math.ceil(responseData.totalRegistros / resultsPerPage);
             document.getElementById('current-page').textContent = `Página ${currentPage} de ${totalPages}`;
-            document.getElementById('pagination-controls').classList.remove('hidden');
+            paginationControls.classList.remove("hidden");
         } else {
-            console.error('Os dados retornados não são um array ou estão vazios.');
+            console.error('Nenhum dado encontrado após o filtro.');
+
+            // Exibe o modal com a mensagem de erro
+            const modal = document.getElementById("modal-itens-edital");
+            const modalContent = document.getElementById("modal-content");
+            modalContent.innerHTML = '<p class="text-red-500">Nenhum dado encontrado após o filtro.</p>';
+            modal.classList.remove("hidden");
         }
     } catch (error) {
         console.error('Erro ao buscar licitações:', error);
     }
 }
+
 async function toggleItensEdital(button) {
     const modal = document.getElementById("modal-itens-edital");
     const modalContent = document.getElementById("modal-content");
